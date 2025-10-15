@@ -1,0 +1,65 @@
+<script>
+  google.script.run.withSuccessHandler(showData).getData();
+
+  function showData(data) {
+    // Karier
+    const karierContainer = document.querySelector('.tree:first-of-type');
+    karierContainer.innerHTML = '';
+    const groupedKarier = {};
+    data.karier.forEach(([bidang, pilihan]) => {
+      if (!groupedKarier[bidang]) groupedKarier[bidang] = [];
+      groupedKarier[bidang].push(pilihan);
+    });
+    for (const bidang in groupedKarier) {
+      const node = document.createElement('div');
+      node.className = 'node';
+      node.textContent = bidang;
+      node.onclick = () => {
+        const id = bidang.replace(/\s+/g, '');
+        toggle(id);
+      };
+      karierContainer.appendChild(node);
+
+      const div = document.createElement('div');
+      div.id = bidang.replace(/\s+/g, '');
+      div.className = 'children';
+      groupedKarier[bidang].forEach(item => {
+        const child = document.createElement('div');
+        child.className = 'node';
+        child.textContent = item;
+        div.appendChild(child);
+      });
+      karierContainer.appendChild(div);
+    }
+
+    // Kebaikan
+    const kebaikanContainer = document.querySelectorAll('.tree')[1];
+    kebaikanContainer.innerHTML = '';
+    const groupedKebaikan = {};
+    data.kebaikan.forEach(([kategori, nilai]) => {
+      if (!groupedKebaikan[kategori]) groupedKebaikan[kategori] = [];
+      groupedKebaikan[kategori].push(nilai);
+    });
+    for (const kategori in groupedKebaikan) {
+      const node = document.createElement('div');
+      node.className = 'node';
+      node.textContent = kategori;
+      node.onclick = () => {
+        const id = kategori.replace(/\s+/g, '');
+        toggle(id);
+      };
+      kebaikanContainer.appendChild(node);
+
+      const div = document.createElement('div');
+      div.id = kategori.replace(/\s+/g, '');
+      div.className = 'children';
+      groupedKebaikan[kategori].forEach(item => {
+        const child = document.createElement('div');
+        child.className = 'node';
+        child.textContent = item;
+        div.appendChild(child);
+      });
+      kebaikanContainer.appendChild(div);
+    }
+  }
+</script>
