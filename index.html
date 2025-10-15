@@ -1,65 +1,189 @@
-<script>
-  google.script.run.withSuccessHandler(showData).getData();
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pohon Karier & Kebaikan | SMA Negeri 1 Tibawa</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(#c3f0e8, #e9f8f3);
+      margin: 0;
+      padding: 0;
+      color: #05445e;
+      text-align: center;
+    }
+    header {
+      padding: 15px;
+      background: #aef1da;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    header img {
+      width: 100px;
+      margin-bottom: 10px;
+    }
+    h1 { margin: 5px 0; }
+    svg {
+      width: 220px;
+      margin-top: 10px;
+    }
+    .tree-area {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin: 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      width: 350px;
+      text-align: center;
+    }
+    .node {
+      background: #d4f8e8;
+      border: 2px solid #75c9b7;
+      border-radius: 12px;
+      padding: 8px 12px;
+      margin: 6px;
+      cursor: pointer;
+      display: inline-block;
+    }
+    .node:hover {
+      background: #b2f0e6;
+    }
+    .selected {
+      background: #5cd3ad;
+      color: white;
+      font-weight: bold;
+    }
+    input, button {
+      margin: 8px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #75c9b7;
+    }
+    button {
+      background: #75c9b7;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover { background: #4bbf9b; }
+    footer {
+      background: #d2f5e3;
+      padding: 10px;
+      font-size: 14px;
+      color: #05445e;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo osis.jpg" alt="Logo SMA Negeri 1 Tibawa">
+    <h1>Pohon Karier & Pohon Kebaikan</h1>
+    <p><strong>SMA Negeri 1 Tibawa</strong></p>
+    <svg viewBox="0 0 64 64">
+      <circle cx="32" cy="32" r="30" fill="#75c9b7"/>
+      <rect x="28" y="32" width="8" height="16" fill="#05445e"/>
+      <circle cx="32" cy="18" r="10" fill="#3bb78f"/>
+    </svg>
+  </header>
 
-  function showData(data) {
-    // Karier
-    const karierContainer = document.querySelector('.tree:first-of-type');
-    karierContainer.innerHTML = '';
-    const groupedKarier = {};
-    data.karier.forEach(([bidang, pilihan]) => {
-      if (!groupedKarier[bidang]) groupedKarier[bidang] = [];
-      groupedKarier[bidang].push(pilihan);
-    });
-    for (const bidang in groupedKarier) {
-      const node = document.createElement('div');
-      node.className = 'node';
-      node.textContent = bidang;
-      node.onclick = () => {
-        const id = bidang.replace(/\s+/g, '');
-        toggle(id);
-      };
-      karierContainer.appendChild(node);
+  <section class="tree-area">
+    <div class="card">
+      <h2>🌱 Pohon Karier</h2>
+      <div id="karier"></div>
+    </div>
 
-      const div = document.createElement('div');
-      div.id = bidang.replace(/\s+/g, '');
-      div.className = 'children';
-      groupedKarier[bidang].forEach(item => {
-        const child = document.createElement('div');
-        child.className = 'node';
-        child.textContent = item;
-        div.appendChild(child);
+    <div class="card">
+      <h2>🌳 Pohon Kebaikan</h2>
+      <div id="kebaikan"></div>
+    </div>
+  </section>
+
+  <section>
+    <h3>🧍‍♀️ Isi Data Diri</h3>
+    <input type="text" id="nama" placeholder="Nama lengkap siswa" required>
+    <button onclick="kirim()">Kirim Pilihan</button>
+    <p id="status"></p>
+  </section>
+
+  <footer>
+    © 2025 SMA Negeri 1 Tibawa – Sahabat Bumi 🌍
+  </footer>
+
+  <script>
+    let pilihanKarier = '';
+    let pilihanKebaikan = '';
+
+    google.script.run.withSuccessHandler(tampilkanData).getData();
+
+    function tampilkanData(data) {
+      const karierDiv = document.getElementById('karier');
+      const groupedKarier = {};
+      data.karier.forEach(([bidang, pilihan]) => {
+        if (!groupedKarier[bidang]) groupedKarier[bidang] = [];
+        groupedKarier[bidang].push(pilihan);
       });
-      karierContainer.appendChild(div);
+      for (const bidang in groupedKarier) {
+        const p = document.createElement('p');
+        p.innerHTML = `<strong>${bidang}</strong>`;
+        karierDiv.appendChild(p);
+        groupedKarier[bidang].forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'node';
+          div.textContent = item;
+          div.onclick = () => pilihKarier(div);
+          karierDiv.appendChild(div);
+        });
+      }
+
+      const kebaikanDiv = document.getElementById('kebaikan');
+      const groupedKebaikan = {};
+      data.kebaikan.forEach(([kategori, nilai]) => {
+        if (!groupedKebaikan[kategori]) groupedKebaikan[kategori] = [];
+        groupedKebaikan[kategori].push(nilai);
+      });
+      for (const kategori in groupedKebaikan) {
+        const p = document.createElement('p');
+        p.innerHTML = `<strong>${kategori}</strong>`;
+        kebaikanDiv.appendChild(p);
+        groupedKebaikan[kategori].forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'node';
+          div.textContent = item;
+          div.onclick = () => pilihKebaikan(div);
+          kebaikanDiv.appendChild(div);
+        });
+      }
     }
 
-    // Kebaikan
-    const kebaikanContainer = document.querySelectorAll('.tree')[1];
-    kebaikanContainer.innerHTML = '';
-    const groupedKebaikan = {};
-    data.kebaikan.forEach(([kategori, nilai]) => {
-      if (!groupedKebaikan[kategori]) groupedKebaikan[kategori] = [];
-      groupedKebaikan[kategori].push(nilai);
-    });
-    for (const kategori in groupedKebaikan) {
-      const node = document.createElement('div');
-      node.className = 'node';
-      node.textContent = kategori;
-      node.onclick = () => {
-        const id = kategori.replace(/\s+/g, '');
-        toggle(id);
-      };
-      kebaikanContainer.appendChild(node);
-
-      const div = document.createElement('div');
-      div.id = kategori.replace(/\s+/g, '');
-      div.className = 'children';
-      groupedKebaikan[kategori].forEach(item => {
-        const child = document.createElement('div');
-        child.className = 'node';
-        child.textContent = item;
-        div.appendChild(child);
-      });
-      kebaikanContainer.appendChild(div);
+    function pilihKarier(el) {
+      document.querySelectorAll('#karier .node').forEach(n => n.classList.remove('selected'));
+      el.classList.add('selected');
+      pilihanKarier = el.textContent;
     }
-  }
-</script>
+    function pilihKebaikan(el) {
+      document.querySelectorAll('#kebaikan .node').forEach(n => n.classList.remove('selected'));
+      el.classList.add('selected');
+      pilihanKebaikan = el.textContent;
+    }
+
+    function kirim() {
+      const nama = document.getElementById('nama').value;
+      if (!nama || !pilihanKarier || !pilihanKebaikan) {
+        document.getElementById('status').textContent = '❗Harap isi semua data terlebih dahulu.';
+        return;
+      }
+      document.getElementById('status').textContent = 'Mengirim data...';
+      google.script.run.withSuccessHandler(res => {
+        document.getElementById('status').textContent = res;
+        document.getElementById('nama').value = '';
+      }).simpanPilihan(nama, pilihanKarier, pilihanKebaikan);
+    }
+  </script>
+</body>
+</html>
