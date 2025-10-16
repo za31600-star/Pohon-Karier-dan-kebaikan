@@ -1,218 +1,159 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pohon Karier & Kebaikan | SMA Negeri 1 Tibawa</title>
+  <meta charset="UTF-8" />
+  <title>Pohon Karier & Pohon Kebaikan - SMA N 1 Tibawa</title>
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(#c3f0e8, #e9f8f3);
-      margin: 0;
-      padding: 0;
-      color: #05445e;
+      font-family: "Poppins", sans-serif;
+      background-color: #eafaf1;
       text-align: center;
-    }
-    header {
-      padding: 15px;
-      background: #aef1da;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 20px;
     }
     header img {
       width: 100px;
-      margin-bottom: 10px;
+      display: block;
+      margin: 0 auto 10px;
     }
-    h1 { margin: 5px 0; }
-    svg {
-      width: 220px;
-      margin-top: 10px;
+    h1 {
+      color: #004d40;
+      font-weight: 700;
     }
-    .tree-area {
+    .menu-container {
       display: flex;
       justify-content: center;
-      flex-wrap: wrap;
       gap: 30px;
-      margin: 20px;
+      margin: 40px auto;
+      flex-wrap: wrap;
     }
-    .card {
+    .menu-card {
       background: white;
-      border-radius: 15px;
+      border-radius: 16px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      padding: 20px;
-      width: 350px;
-      text-align: center;
-    }
-    .node {
-      background: #d4f8e8;
-      border: 2px solid #75c9b7;
-      border-radius: 12px;
-      padding: 8px 12px;
-      margin: 6px;
+      padding: 40px;
+      width: 250px;
       cursor: pointer;
-      display: inline-block;
+      transition: 0.3s;
     }
-    .node:hover {
-      background: #b2f0e6;
+    .menu-card:hover {
+      background-color: #c8f7dc;
+      transform: scale(1.05);
     }
-    .selected {
-      background: #5cd3ad;
-      color: white;
-      font-weight: bold;
+    form {
+      margin-top: 20px;
+      display: none;
     }
-    input, button {
-      margin: 8px;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #75c9b7;
+    label {
+      display: block;
+      margin-top: 10px;
+      color: #00695c;
+    }
+    input, textarea, select {
+      width: 80%;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #bdbdbd;
     }
     button {
-      background: #75c9b7;
+      margin-top: 20px;
+      background-color: #26a69a;
+      border: none;
       color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
       cursor: pointer;
-      font-weight: bold;
     }
-    button:hover { background: #4bbf9b; }
-    footer {
-      background: #d2f5e3;
-      padding: 10px;
-      font-size: 14px;
-      color: #05445e;
+    button:hover {
+      background-color: #2bbbad;
     }
   </style>
 </head>
 <body>
   <header>
-    <img src="logo-osis.jpg" alt="Logo SMA Negeri 1 Tibawa">
-    <h1>Pohon Karier & Pohon Kebaikan</h1>
-    <p><strong>SMA Negeri 1 Tibawa</strong></p>
-    <svg viewBox="0 0 64 64">
-      <circle cx="32" cy="32" r="30" fill="#75c9b7"/>
-      <rect x="28" y="32" width="8" height="16" fill="#05445e"/>
-      <circle cx="32" cy="18" r="10" fill="#3bb78f"/>
-    </svg>
+    <img src="https://raw.githubusercontent.com/za31600-star/main/logo-sman1tibawa.png" alt="Logo SMA N 1 Tibawa" />
+    <h1>🌿 Pohon Karier & Pohon Kebaikan</h1>
+    <h3>SMA Negeri 1 Tibawa</h3>
   </header>
 
-  <section class="tree-area">
-    <div class="card">
-      <h2>🌱 Pohon Karier</h2>
-      <div id="karier"></div>
-    </div>
+  <div class="menu-container">
+    <div class="menu-card" onclick="showForm('karier')">🌱 Pohon Karier</div>
+    <div class="menu-card" onclick="showForm('kebaikan')">🌳 Pohon Kebaikan</div>
+  </div>
 
-    <div class="card">
-      <h2>🌳 Pohon Kebaikan</h2>
-      <div id="kebaikan"></div>
-    </div>
-  </section>
+  <!-- Form Pohon Karier -->
+  <form id="form-karier">
+    <h3>🌱 Pohon Karier</h3>
+    <label>Nama Lengkap:</label>
+    <input type="text" id="namaKarier" required />
 
-  <section>
-    <h3>🧍‍♀️ Isi Data Diri</h3>
-    <input type="text" id="nama" placeholder="Nama lengkap siswa" required>
-    <button onclick="kirim()">Kirim Pilihan</button>
-    <p id="status"></p>
-  </section>
+    <label>Pilihan Karier:</label>
+    <input type="text" id="pilihanKarier" required />
 
-  <footer>
-    © 2025 SMA Negeri 1 Tibawa – Sahabat Bumi 🌍
-  </footer>
+    <label>Bakat yang Mendukung:</label>
+    <textarea id="bakatKarier" rows="2"></textarea>
+
+    <label>Alasan Memilih Karier:</label>
+    <textarea id="alasanKarier" rows="3"></textarea>
+
+    <button type="button" onclick="submitForm('karier')">Kirim</button>
+  </form>
+
+  <!-- Form Pohon Kebaikan -->
+  <form id="form-kebaikan">
+    <h3>🌳 Pohon Kebaikan</h3>
+    <label>Nama Lengkap:</label>
+    <input type="text" id="namaKebaikan" required />
+
+    <label>Tindakan Kebaikan:</label>
+    <input type="text" id="aksiKebaikan" required />
+
+    <label>Nilai atau Sikap yang Terkandung:</label>
+    <textarea id="nilaiKebaikan" rows="2"></textarea>
+
+    <label>Alasan Melakukan Kebaikan:</label>
+    <textarea id="alasanKebaikan" rows="3"></textarea>
+
+    <button type="button" onclick="submitForm('kebaikan')">Kirim</button>
+  </form>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxVl0Jh2vFeoMRUK9yojcp-lWS9Xl01ASv7elAYM2OQfXsbiyEZ3kQ0ay5gZMgeJ7Zf/exec";
-    let pilihanKarier = '';
-    let pilihanKebaikan = '';
+    const url = "https://script.google.com/macros/s/AKfycbwsSneFh8ZspP6ZjyieT_Lb9rZgvLU_-9mxnO13SFM/dev";
 
-    // Ambil data dari Apps Script
-    document.addEventListener('DOMContentLoaded', () => {
-      fetch(SCRIPT_URL)
-        .then(res => res.json())
-        .then(data => tampilkanData(data))
-        .catch(err => {
-          console.error('Gagal mengambil data:', err);
-          document.getElementById('status').textContent = '⚠️ Gagal memuat data pohon.';
-        });
-    });
-
-    function tampilkanData(data) {
-      // === Pohon Karier ===
-      const karierDiv = document.getElementById('karier');
-      const groupedKarier = {};
-      data.karier.forEach(([bidang, pilihan]) => {
-        if (!groupedKarier[bidang]) groupedKarier[bidang] = [];
-        groupedKarier[bidang].push(pilihan);
-      });
-      for (const bidang in groupedKarier) {
-        const p = document.createElement('p');
-        p.innerHTML = `<strong>${bidang}</strong>`;
-        karierDiv.appendChild(p);
-        groupedKarier[bidang].forEach(item => {
-          const div = document.createElement('div');
-          div.className = 'node';
-          div.textContent = item;
-          div.onclick = () => pilihKarier(div);
-          karierDiv.appendChild(div);
-        });
-      }
-
-      // === Pohon Kebaikan ===
-      const kebaikanDiv = document.getElementById('kebaikan');
-      const groupedKebaikan = {};
-      data.kebaikan.forEach(([kategori, nilai]) => {
-        if (!groupedKebaikan[kategori]) groupedKebaikan[kategori] = [];
-        groupedKebaikan[kategori].push(nilai);
-      });
-      for (const kategori in groupedKebaikan) {
-        const p = document.createElement('p');
-        p.innerHTML = `<strong>${kategori}</strong>`;
-        kebaikanDiv.appendChild(p);
-        groupedKebaikan[kategori].forEach(item => {
-          const div = document.createElement('div');
-          div.className = 'node';
-          div.textContent = item;
-          div.onclick = () => pilihKebaikan(div);
-          kebaikanDiv.appendChild(div);
-        });
-      }
+    function showForm(type) {
+      document.getElementById("form-karier").style.display = type === "karier" ? "block" : "none";
+      document.getElementById("form-kebaikan").style.display = type === "kebaikan" ? "block" : "none";
+      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
     }
 
-    function pilihKarier(el) {
-      document.querySelectorAll('#karier .node').forEach(n => n.classList.remove('selected'));
-      el.classList.add('selected');
-      pilihanKarier = el.textContent;
-    }
-
-    function pilihKebaikan(el) {
-      document.querySelectorAll('#kebaikan .node').forEach(n => n.classList.remove('selected'));
-      el.classList.add('selected');
-      pilihanKebaikan = el.textContent;
-    }
-
-    // Kirim data ke Apps Script
-    function kirim() {
-      const nama = document.getElementById('nama').value;
-      if (!nama || !pilihanKarier || !pilihanKebaikan) {
-        document.getElementById('status').textContent = '❗Harap isi semua data terlebih dahulu.';
-        return;
+    function submitForm(type) {
+      let data = {};
+      if (type === "karier") {
+        data = {
+          nama: document.getElementById("namaKarier").value,
+          pilihan: document.getElementById("pilihanKarier").value,
+          bakat: document.getElementById("bakatKarier").value,
+          alasan: document.getElementById("alasanKarier").value,
+          jenis: "karier"
+        };
+      } else {
+        data = {
+          nama: document.getElementById("namaKebaikan").value,
+          aksi: document.getElementById("aksiKebaikan").value,
+          nilai: document.getElementById("nilaiKebaikan").value,
+          alasan: document.getElementById("alasanKebaikan").value,
+          jenis: "kebaikan"
+        };
       }
 
-      document.getElementById('status').textContent = '⏳ Mengirim data...';
-      fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          nama: nama,
-          karier: pilihanKarier,
-          kebaikan: pilihanKebaikan
-        })
-      })
-        .then(res => res.text())
-        .then(res => {
-          document.getElementById('status').textContent = '✅ ' + res;
-          document.getElementById('nama').value = '';
-          document.querySelectorAll('.node').forEach(n => n.classList.remove('selected'));
-        })
-        .catch(err => {
-          console.error(err);
-          document.getElementById('status').textContent = '❌ Gagal mengirim data.';
-        });
+      fetch(url, {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify(data)
+      }).then(() => {
+        alert("Data berhasil dikirim!");
+        document.getElementById("form-karier").reset();
+        document.getElementById("form-kebaikan").reset();
+      }).catch(err => alert("Gagal mengirim data: " + err));
     }
   </script>
 </body>
