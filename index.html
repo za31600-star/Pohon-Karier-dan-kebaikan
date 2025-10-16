@@ -116,12 +116,23 @@
   </footer>
 
   <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwsSneFh8ZspP6ZjyieT_Lb9rZgvLU_-9mxnO13SFM/dev";
     let pilihanKarier = '';
     let pilihanKebaikan = '';
 
-    google.script.run.withSuccessHandler(tampilkanData).getData();
+    // Ambil data dari Apps Script
+    document.addEventListener('DOMContentLoaded', () => {
+      fetch(SCRIPT_URL)
+        .then(res => res.json())
+        .then(data => tampilkanData(data))
+        .catch(err => {
+          console.error('Gagal mengambil data:', err);
+          document.getElementById('status').textContent = '⚠️ Gagal memuat data pohon.';
+        });
+    });
 
     function tampilkanData(data) {
+      // === Pohon Karier ===
       const karierDiv = document.getElementById('karier');
       const groupedKarier = {};
       data.karier.forEach(([bidang, pilihan]) => {
@@ -141,6 +152,7 @@
         });
       }
 
+      // === Pohon Kebaikan ===
       const kebaikanDiv = document.getElementById('kebaikan');
       const groupedKebaikan = {};
       data.kebaikan.forEach(([kategori, nilai]) => {
@@ -166,23 +178,41 @@
       el.classList.add('selected');
       pilihanKarier = el.textContent;
     }
+
     function pilihKebaikan(el) {
       document.querySelectorAll('#kebaikan .node').forEach(n => n.classList.remove('selected'));
       el.classList.add('selected');
       pilihanKebaikan = el.textContent;
     }
 
+    // Kirim data ke Apps Script
     function kirim() {
       const nama = document.getElementById('nama').value;
       if (!nama || !pilihanKarier || !pilihanKebaikan) {
         document.getElementById('status').textContent = '❗Harap isi semua data terlebih dahulu.';
         return;
       }
-      document.getElementById('status').textContent = 'Mengirim data...';
-      google.script.run.withSuccessHandler(res => {
-        document.getElementById('status').textContent = res;
-        document.getElementById('nama').value = '';
-      }).simpanPilihan(nama, pilihanKarier, pilihanKebaikan);
+
+      document.getElementById('status').textContent = '⏳ Mengirim data...';
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nama: nama,
+          karier: pilihanKarier,
+          kebaikan: pilihanKebaikan
+        })
+      })
+        .then(res => res.text())
+        .then(res => {
+          document.getElementById('status').textContent = '✅ ' + res;
+          document.getElementById('nama').value = '';
+          document.querySelectorAll('.node').forEach(n => n.classList.remove('selected'));
+        })
+        .catch(err => {
+          console.error(err);
+          document.getElementById('status').textContent = '❌ Gagal mengirim data.';
+        });
     }
   </script>
 </body>
