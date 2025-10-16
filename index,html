@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pohon Karier & Kebaikan | SMA Negeri 1 Tibawa</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(#c3f0e8, #e9f8f3);
+      margin: 0;
+      padding: 0;
+      color: #05445e;
+      text-align: center;
+    }
+    header {
+      padding: 15px;
+      background: #aef1da;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    header img {
+      width: 100px;
+      margin-bottom: 8px;
+    }
+    h1 { margin: 5px 0; }
+    svg {
+      width: 200px;
+      margin-top: 8px;
+    }
+    .tree-area {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin: 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      width: 320px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .card:hover {
+      transform: scale(1.05);
+      background-color: #d4f8e8;
+    }
+    form {
+      display: none;
+      max-width: 400px;
+      margin: 20px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+    form.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+    input, textarea, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #75c9b7;
+      border-radius: 8px;
+      font-family: inherit;
+    }
+    button {
+      background: #75c9b7;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+    button:hover { background: #4bbf9b; }
+    footer {
+      background: #d2f5e3;
+      padding: 10px;
+      font-size: 14px;
+      color: #05445e;
+      margin-top: 30px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo osis.jpg" alt="Logo SMA Negeri 1 Tibawa" />
+    <h1>Pohon Karier & Pohon Kebaikan</h1>
+    <p><strong>SMA Negeri 1 Tibawa</strong></p>
+    <svg viewBox="0 0 64 64">
+      <circle cx="32" cy="32" r="30" fill="#75c9b7"/>
+      <rect x="28" y="32" width="8" height="16" fill="#05445e"/>
+      <circle cx="32" cy="18" r="10" fill="#3bb78f"/>
+    </svg>
+  </header>
+
+  <section class="tree-area">
+    <div class="card" onclick="bukaForm('karier')">
+      <h2>🌱 Pohon Karier</h2>
+      <p>Temukan arah masa depanmu dan alasanmu memilih karier</p>
+    </div>
+    <div class="card" onclick="bukaForm('kebaikan')">
+      <h2>🌳 Pohon Kebaikan</h2>
+      <p>Tumbuhkan nilai kebaikan dalam dirimu</p>
+    </div>
+  </section>
+
+  <!-- Form Karier -->
+  <form id="formKarier">
+    <h2>🌱 Pohon Karier</h2>
+    <label>Nama Lengkap:</label>
+    <input type="text" id="namaKarier" placeholder="Nama lengkap siswa" required />
+    <label>Pilihan Karier:</label>
+    <input type="text" id="pilihanKarier" placeholder="Contoh: Dokter, Guru, Programmer..." required />
+    <label>Bakat yang Mendukung:</label>
+    <textarea id="bakat" placeholder="Tuliskan bakat atau kemampuanmu..."></textarea>
+    <label>Alasan Memilih Karier:</label>
+    <textarea id="alasanKarier" placeholder="Mengapa kamu memilih karier ini?"></textarea>
+    <button type="button" onclick="kirimData('karier')">Kirim</button>
+    <p id="statusKarier"></p>
+  </form>
+
+  <!-- Form Kebaikan -->
+  <form id="formKebaikan">
+    <h2>🌳 Pohon Kebaikan</h2>
+    <label>Nama Lengkap:</label>
+    <input type="text" id="namaKebaikan" placeholder="Nama lengkap siswa" required />
+    <label>Aksi Kebaikan:</label>
+    <input type="text" id="aksi" placeholder="Contoh: Menolong teman, membuang sampah pada tempatnya..." required />
+    <label>Nilai yang Ditunjukkan:</label>
+    <textarea id="nilai" placeholder="Contoh: Kepedulian, Tanggung jawab..."></textarea>
+    <label>Alasan Melakukannya:</label>
+    <textarea id="alasanKebaikan" placeholder="Mengapa kamu melakukan kebaikan ini?"></textarea>
+    <button type="button" onclick="kirimData('kebaikan')">Kirim</button>
+    <p id="statusKebaikan"></p>
+  </form>
+
+  <footer>
+    © 2025 SMA Negeri 1 Tibawa – Sahabat Bumi 🌍
+  </footer>
+
+  <script>
+    const url = "https://script.google.com/macros/s/AKfycbwsSneFh8ZspP6ZjyieT_Lb9rZgvLU_-9mxnO13SFM/dev";
+
+    function bukaForm(jenis) {
+      document.getElementById('formKarier').classList.remove('active');
+      document.getElementById('formKebaikan').classList.remove('active');
+      if (jenis === 'karier') {
+        document.getElementById('formKarier').classList.add('active');
+        window.scrollTo({ top: 500, behavior: 'smooth' });
+      } else {
+        document.getElementById('formKebaikan').classList.add('active');
+        window.scrollTo({ top: 500, behavior: 'smooth' });
+      }
+    }
+
+    async function kirimData(jenis) {
+      let data = {};
+      if (jenis === 'karier') {
+        data = {
+          nama: document.getElementById('namaKarier').value,
+          pilihan: document.getElementById('pilihanKarier').value,
+          bakat: document.getElementById('bakat').value,
+          alasan: document.getElementById('alasanKarier').value,
+          jenis: 'karier'
+        };
+      } else {
+        data = {
+          nama: document.getElementById('namaKebaikan').value,
+          aksi: document.getElementById('aksi').value,
+          nilai: document.getElementById('nilai').value,
+          alasan: document.getElementById('alasanKebaikan').value,
+          jenis: 'kebaikan'
+        };
+      }
+
+      const statusEl = document.getElementById(`status${jenis.charAt(0).toUpperCase() + jenis.slice(1)}`);
+      statusEl.textContent = "Mengirim data...";
+
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+        statusEl.textContent = "✅ Data berhasil dikirim!";
+      } catch (err) {
+        statusEl.textContent = "⚠️ Gagal mengirim data.";
+      }
+    }
+  </script>
+</body>
+</html>
